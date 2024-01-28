@@ -3,6 +3,12 @@ import Meme1 from '../assets/images/memes/meme1.jpeg';
 import Meme2 from '../assets/images/memes/meme2.jpeg';
 import Meme3 from '../assets/images/memes/meme3.jpeg';
 import Meme4 from '../assets/images/memes/meme4.jpeg';
+import Meme5 from '../assets/images/memes/meme5.jpeg';
+import Meme6 from '../assets/images/memes/meme6.jpeg';
+import Meme7 from '../assets/images/memes/meme7.jpeg';
+import Meme8 from '../assets/images/memes/meme8.jpeg';
+import Meme9 from '../assets/images/memes/meme9.jpeg';
+import Meme10 from '../assets/images/memes/meme10.jpeg';
 
 export const tempMemeArticlesArray = [
   {
@@ -90,6 +96,36 @@ export const tempMemeArticlesArray = [
           {
             id: 'img3',
             imageUrl: Meme4, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme5, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme6, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme7, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme8, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme9, // Replace with actual URL
+            imageTitle: 'Classic Meme 2',
+          },
+          {
+            id: 'img3',
+            imageUrl: Meme10, // Replace with actual URL
             imageTitle: 'Classic Meme 2',
           },
           // Add more images as needed
