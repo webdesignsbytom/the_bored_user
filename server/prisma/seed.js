@@ -4,6 +4,7 @@ import dbClient from '../src/utils/dbClient.js';
 async function seed() {
   const password = await bcrypt.hash('123', 8);
 
+  // Create users
   const user1 = await dbClient.user.create({
     data: {
       email: `user1@gmail.com`,
@@ -50,14 +51,14 @@ async function seed() {
     },
   });
 
-  // Create some fake articles
+  // Create some fake articles with different types
   const article1 = await dbClient.article.create({
     data: {
       articleItems: {
         create: [
           {
-            articleTitle: 'Fake Article 1',
-            articleContent: 'This is the content of fake article 1',
+            articleTitle: 'News Article 1',
+            articleContent: 'This is the content of news article 1',
             articleAuthor: 'John Doe',
             articleType: 'NEWS',
             articleTags: 'Fake, News',
@@ -81,8 +82,8 @@ async function seed() {
       articleItems: {
         create: [
           {
-            articleTitle: 'Fake Article 2',
-            articleContent: 'This is the content of fake article 2',
+            articleTitle: 'Opinion Article 1',
+            articleContent: 'This is the content of opinion article 1',
             articleAuthor: 'Jane Smith',
             articleType: 'OPINION',
             articleTags: 'Fake, Opinion',
@@ -106,8 +107,8 @@ async function seed() {
       articleItems: {
         create: [
           {
-            articleTitle: 'Fake Article 3',
-            articleContent: 'This is the content of fake article 3',
+            articleTitle: 'Feature Article 1',
+            articleContent: 'This is the content of feature article 1',
             articleAuthor: 'Bob Johnson',
             articleType: 'FEATURE',
             articleTags: 'Fake, Feature',
@@ -169,7 +170,7 @@ async function seed() {
   // Create comments for articles and article items
   const comment1 = await dbClient.articleComment.create({
     data: {
-      content: 'This is a comment on article 1.',
+      content: 'This is a comment on news article 1.',
       userId: user1.id,
       articleId: article1.id,
     },
@@ -177,7 +178,7 @@ async function seed() {
 
   const comment2 = await dbClient.articleComment.create({
     data: {
-      content: 'I enjoyed reading this article!',
+      content: 'I enjoyed reading this news article!',
       userId: user2.id,
       articleId: article1.id,
     },
@@ -185,7 +186,7 @@ async function seed() {
 
   const comment3 = await dbClient.articleComment.create({
     data: {
-      content: 'Nice article!',
+      content: 'Nice opinion article!',
       userId: user3.id,
       articleId: article2.id,
     },
@@ -193,7 +194,7 @@ async function seed() {
 
   const comment4 = await dbClient.articleItemComment.create({
     data: {
-      content: 'This is a comment on article item 1.',
+      content: 'This is a comment on meme 1.',
       userId: user1.id,
       articleItemId: memes[0].id,
     },
@@ -212,6 +213,63 @@ async function seed() {
       content: 'I love this meme!',
       userId: user3.id,
       articleItemId: memes[1].id,
+    },
+  });
+
+  // Create likes for articles and article items
+  const articleLike1 = await dbClient.articleLike.create({
+    data: {
+      userId: user1.id,
+      articleId: article1.id,
+    },
+  });
+
+  const articleLike2 = await dbClient.articleLike.create({
+    data: {
+      userId: user2.id,
+      articleId: article1.id,
+    },
+  });
+
+  const articleItemLike1 = await dbClient.articleItemLike.create({
+    data: {
+      userId: user1.id,
+      articleItemId: memes[0].id,
+    },
+  });
+
+  const articleItemLike2 = await dbClient.articleItemLike.create({
+    data: {
+      userId: user2.id,
+      articleItemId: memes[0].id,
+    },
+  });
+
+  const articleCommentLike1 = await dbClient.articleCommentLike.create({
+    data: {
+      userId: user1.id,
+      articleCommentId: comment1.id,
+    },
+  });
+
+  const articleCommentLike2 = await dbClient.articleCommentLike.create({
+    data: {
+      userId: user2.id,
+      articleCommentId: comment1.id,
+    },
+  });
+
+  const articleItemCommentLike1 = await dbClient.articleItemCommentLike.create({
+    data: {
+      userId: user1.id,
+      articleItemCommentId: comment4.id,
+    },
+  });
+
+  const articleItemCommentLike2 = await dbClient.articleItemCommentLike.create({
+    data: {
+      userId: user2.id,
+      articleItemCommentId: comment4.id,
     },
   });
 
