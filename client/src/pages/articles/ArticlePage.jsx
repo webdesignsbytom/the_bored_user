@@ -17,7 +17,7 @@ function ArticlePage() {
 
         {/* Main */}
         <main className='grid h-full w-full'>
-          <section className='bg-gray-50 grid grid-rows-reg h-ful w-2/3 mx-auto'>
+          <section className='bg-gray-50 grid grid-rows-reg h-full md:w-2/3 mx-auto'>
             {/* Article Header */}
             <div>
               <header className='grid grid-cols-2 px-2 bg-slate-300 py-1 border-b-2 border-solid border-yellow-500'>

@@ -46,7 +46,7 @@ function Navbar() {
         }}
       >
         {/* Main nav content */}
-        <div className='grid grid-cols-3 h-full py-2 border-b-4 border-solid border-yellow-500'>
+        <div className='grid grid-cols-2 md:grid-cols-3 h-full py-2 border-b-4 border-solid border-yellow-500'>
           {/* Logo */}
           <section className='grid grid-flow-col gap-4 items-center justify-start pl-4 2xl:pl-8'>
             <div>
@@ -63,7 +63,7 @@ function Navbar() {
             </div>
           </section>
 
-          <section className='grid items-center justify-center'>
+          <section className='hidden md:grid items-center justify-center'>
             <div className='grid grid-cols-2 gap-2'>
               <div className='grid w-full'>
                 <button
