@@ -16,31 +16,36 @@ enum Role {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  email          String    @unique
-  password       String
-  article        Article[]
-  comments       Comment[]
-  likes          Like[]
-  role           Role      @default(USER)
-  createdEvents  Event[]   @relation("createdEvents")
-  receivedEvents Event[]   @relation("receivedEvents")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime? @updatedAt
+  id                       String                   @id @default(uuid())
+  email                    String                   @unique
+  password                 String
+  article                  Article[]
+  articleLikes             ArticleLike[]
+  articleComments          ArticleComment[]
+  articleCommentLikes      ArticleCommentLike[]
+  articleItemComments      ArticleItemComment[]
+  articleItemLike          ArticleItemLike[]
+  articleItemCommentsLikes ArticleItemCommentLike[]
+  role                     Role                     @default(USER)
+  createdEvents            Event[]                  @relation("createdEvents")
+  receivedEvents           Event[]                  @relation("receivedEvents")
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime?                @updatedAt
 }
 
 model Article {
-  id           String        @id @default(uuid())
+  id           String           @id @default(uuid())
   articleItems ArticleItem[]
-  comments     Comment[]
-  User         User?         @relation(fields: [userId], references: [id])
+  comments     ArticleComment[]
+  likes        ArticleLike[]
+  User         User?            @relation(fields: [userId], references: [id])
   userId       String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime?     @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime?        @updatedAt
 }
 
 model ArticleItem {
-  id             String         @id @default(uuid())
+  id             String               @id @default(uuid())
   articleTitle   String
   articleContent String
   articleAuthor  String
@@ -48,11 +53,11 @@ model ArticleItem {
   articleTags    String
   articleImages  ArticleImage[]
   articleId      String
-  comments       Comment[]
-  likes          Like[]
-  article        Article        @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime?      @updatedAt
+  comments       ArticleItemComment[]
+  likes          ArticleItemLike[]
+  article        Article              @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime?            @updatedAt
 }
 
 model ArticleImage {
@@ -60,42 +65,85 @@ model ArticleImage {
   imageUrl      String
   imageTitle    String
   articleItemId String
-  comments      Comment[]
   articleItem   ArticleItem @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime?   @updatedAt
 }
 
-model Comment {
-  id             String        @id @default(uuid())
-  content        String        @db.VarChar(250)
-  userId         String
-  user           User          @relation(fields: [userId], references: [id])
-  articleId      String
-  article        Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleItemId  String
-  articleItem    ArticleItem   @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
-  likes          Like[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime?     @updatedAt
-  ArticleImage   ArticleImage? @relation(fields: [articleImageId], references: [id])
-  articleImageId String?
+model ArticleComment {
+  id        String               @id @default(uuid())
+  content   String               @db.VarChar(250)
+  userId    String
+  user      User                 @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article              @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  likes     ArticleCommentLike[]
+  createdAt DateTime             @default(now())
+  updatedAt DateTime?            @updatedAt
 }
 
-model Like {
+model ArticleItemComment {
+  id            String                   @id @default(uuid())
+  content       String                   @db.VarChar(250)
+  userId        String
+  user          User                     @relation(fields: [userId], references: [id])
+  articleItemId String
+  articleItem   ArticleItem              @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
+  likes         ArticleItemCommentLike[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime?                @updatedAt
+}
+
+model ArticleLike {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define a composite unique constraint on userId and commentId
+  @@unique([userId, articleId])
+}
+
+model ArticleItemLike {
   id            String      @id @default(uuid())
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  comment       Comment     @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId     String
   articleItem   ArticleItem @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
   articleItemId String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   // Define a composite unique constraint on userId and commentId
-  @@unique([userId, commentId])
   @@unique([userId, articleItemId])
+}
+
+model ArticleCommentLike {
+  id               String         @id @default(uuid())
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  articleComment   ArticleComment @relation(fields: [articleCommentId], references: [id], onDelete: Cascade)
+  articleCommentId String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Define a composite unique constraint on userId and commentId
+  @@unique([userId, articleCommentId])
+}
+
+model ArticleItemCommentLike {
+  id                   String             @id @default(uuid())
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  articleItemComment   ArticleItemComment @relation(fields: [articleItemCommentId], references: [id], onDelete: Cascade)
+  articleItemCommentId String
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  // Define a composite unique constraint on userId and commentId
+  @@unique([userId, articleItemCommentId])
 }
 
 // EVENTS
