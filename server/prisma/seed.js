@@ -61,7 +61,7 @@ async function seed() {
       articleHeaderImages: {
         create: [
           {
-            imageUrl: 'image_url_1.jpg',
+            imageUrl: 'meme3.jpeg',
             imageTitle: 'Image 1',
           },
         ],
@@ -73,7 +73,7 @@ async function seed() {
             articleImages: {
               create: [
                 {
-                  imageUrl: 'image_url_1.jpg',
+                  imageUrl: 'meme1.jpeg',
                   imageTitle: 'Image 1',
                 },
               ],
@@ -94,7 +94,7 @@ async function seed() {
       articleHeaderImages: {
         create: [
           {
-            imageUrl: 'image_url_1.jpg',
+            imageUrl: 'meme2.jpeg',
             imageTitle: 'Image 1',
           },
         ],
@@ -106,7 +106,7 @@ async function seed() {
             articleImages: {
               create: [
                 {
-                  imageUrl: 'image_url_2.jpg',
+                  imageUrl: 'meme4.jpeg',
                   imageTitle: 'Image 2',
                 },
               ],
@@ -127,7 +127,7 @@ async function seed() {
       articleHeaderImages: {
         create: [
           {
-            imageUrl: 'image_url_1.jpg',
+            imageUrl: 'meme6.jpeg',
             imageTitle: 'Image 1',
           },
         ],
@@ -139,7 +139,7 @@ async function seed() {
             articleImages: {
               create: [
                 {
-                  imageUrl: 'image_url_3.jpg',
+                  imageUrl: 'meme7.jpeg',
                   imageTitle: 'Image 3',
                 },
               ],

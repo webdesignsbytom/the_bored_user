@@ -1,17 +1,40 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // Components
 import Navbar from '../../components/nav/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToggleContext } from '../../context/ToggleContext';
 import HomePageHeader from '../../components/home/HomePageHeader';
+import HomePageMainContent from '../../components/home/HomePageMainContent';
+// Context
+import { ToggleContext } from '../../context/ToggleContext';
+// Api
+import client from '../../api/client';
 
 function HomePage() {
   const { setActiveNav } = useContext(ToggleContext);
+
+  const [allArticles, setAllArticles] = useState([]);
+  const [articleImagesEndPoint, setArticleImagesEndPoint] = useState('');
+  console.log('allArticles', allArticles);
+  console.log('articleImagesEndPoint', articleImagesEndPoint);
 
   let navigate = useNavigate();
 
   useEffect(() => {
     setActiveNav('/');
+  }, []);
+
+  useEffect(() => {
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAa');
+    client
+      .get(`/`)
+      .then((res) => {
+        console.log(res.data.data.articles);
+        setAllArticles(res.data.data.articles);
+        setArticleImagesEndPoint(res.data.data.imageEndPoint);
+      })
+      .catch((err) => {
+        console.error('Unable to retrieve user data', err);
+      });
   }, []);
 
   const navigateToPage = (event) => {
@@ -53,7 +76,9 @@ function HomePage() {
                 {/* Main */}
                 <section className='grid bg-orange-300 mt-4'>
                   <div className='grid grid-cols-2 gap-4'>
-                    <section className='bg-green-300'>latest</section>
+                    <section className='bg-green-300'>
+                      <HomePageMainContent />
+                    </section>
                     <section className='bg-purple-300'>Funny</section>
                   </div>
                 </section>

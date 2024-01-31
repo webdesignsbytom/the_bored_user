@@ -19,15 +19,30 @@ import { findAllArticles } from '../domain/articles.js';
 // Image upload
 // const storage = multer.memoryStorage();
 // const upload = multer({ storage });
+import fs from 'fs';
 
 export const getLatestArticles = async (req, res) => {
   console.log('getLatestArticles');
 
   try {
+    const testFolder = './src/assets/images/memes/';
+    const imageEndPoint = './src/assets/images/memes/';
+
+    fs.readdir(testFolder, (err, files) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    
+      files.forEach((file) => {
+        console.log(file);
+      });
+    });
+
     const foundArticles = await findAllArticles();
     console.log('foundArticles', foundArticles);
 
-    return sendDataResponse(res, 200, { articles: foundArticles });
+    return sendDataResponse(res, 200, { articles: foundArticles, imageEndPoint: imageEndPoint });
   } catch (err) {
     //
     const serverError = new ServerErrorEvent(req.user, `Get all events`);
