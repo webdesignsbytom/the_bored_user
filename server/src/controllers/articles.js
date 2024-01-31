@@ -26,7 +26,7 @@ export const getLatestArticles = async (req, res) => {
 
   try {
     const testFolder = './src/assets/images/memes/';
-    const imageEndPoint = './src/assets/images/memes/';
+    const imageEndPoint = 'http://localhost:4000/src/assets/images/memes/';
 
     fs.readdir(testFolder, (err, files) => {
       if (err) {

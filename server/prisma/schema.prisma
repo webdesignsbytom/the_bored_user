@@ -38,7 +38,7 @@ model Article {
   articleTitle        String
   articleAuthor       String
   articleType         String
-  articleTags         String
+  articleTags         String[]
   articleItems        ArticleItem[]
   comments            ArticleComment[]
   likes               ArticleLike[]

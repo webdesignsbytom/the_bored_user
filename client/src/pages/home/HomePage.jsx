@@ -26,7 +26,7 @@ function HomePage() {
   useEffect(() => {
     console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAa');
     client
-      .get(`/`)
+      .get(`/articles/get-latest-articles`)
       .then((res) => {
         console.log(res.data.data.articles);
         setAllArticles(res.data.data.articles);
@@ -50,13 +50,13 @@ function HomePage() {
         <Navbar />
 
         {/* Main */}
-        <main className='grid h-full w-full bg-pink-200'>
-          <div className='grid grid-rows-reg w-full h-full overflow-y-scroll'>
+        <main className='grid h-full w-full bg-pink-200 overflow-hidden'>
+          <div className='grid grid-rows-reg w-full h-full overflow-hidden'>
             {/* Main page header */}
             <HomePageHeader />
 
-            <div className='bg-white grid w-full h-full'>
-              <section className='bg-red-300 grid grid-rows-reg h-ful w-2/3 mx-auto'>
+            <div className='bg-white grid w-full h-full overflow-y-scroll'>
+              <section className='bg-red-300 grid grid-rows-reg h-ful xl:w-2/3 mx-auto'>
                 {/* Titles */}
                 <section className='grid bg-blue-400 h-fit text-center'>
                   <div className='grid'>
@@ -77,7 +77,10 @@ function HomePage() {
                 <section className='grid bg-orange-300 mt-4'>
                   <div className='grid grid-cols-2 gap-4'>
                     <section className='bg-green-300'>
-                      <HomePageMainContent />
+                      <HomePageMainContent
+                        allArticles={allArticles}
+                        articleImagesEndPoint={articleImagesEndPoint}
+                      />
                     </section>
                     <section className='bg-purple-300'>Funny</section>
                   </div>

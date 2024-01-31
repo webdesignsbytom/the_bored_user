@@ -57,7 +57,7 @@ async function seed() {
       articleTitle: 'News Article 1',
       articleAuthor: 'John Doe',
       articleType: 'NEWS',
-      articleTags: 'Fake, News',
+      articleTags: ['Fake', 'News'],
       articleHeaderImages: {
         create: [
           {
@@ -90,7 +90,7 @@ async function seed() {
       articleTitle: 'Opinion Article 1',
       articleAuthor: 'Jane Smith',
       articleType: 'OPINION',
-      articleTags: 'Fake, Opinion',
+      articleTags: ['Fake', 'News'],
       articleHeaderImages: {
         create: [
           {
@@ -123,7 +123,7 @@ async function seed() {
       articleTitle: 'Feature Article 1',
       articleAuthor: 'Bob Johnson',
       articleType: 'FEATURE',
-      articleTags: 'Fake, Feature',
+      articleTags: ['Fake', 'News'],
       articleHeaderImages: {
         create: [
           {
