@@ -19,6 +19,23 @@ import {
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+export const getLatestArticles = async (req, res) => {
+  console.log('getLatestArticles');
+
+  try {
+    const foundArticles = await findAllArticles();
+    console.log('foundArticles', foundArticles);
+
+    return sendDataResponse(res, 200, { articles: foundArticles });
+  } catch (err) {
+    //
+    const serverError = new ServerErrorEvent(req.user, `Get all events`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
+
 export const uploadImageToArticle = async (req, res) => {
   console.log('uploadImageToArticle');
 
@@ -35,7 +52,10 @@ export const uploadImageToArticle = async (req, res) => {
       },
     });
 
-    res.status(200).json({ message: 'Image uploaded and saved as BLOB to the database', image: createdImage });
+    res.status(200).json({
+      message: 'Image uploaded and saved as BLOB to the database',
+      image: createdImage,
+    });
   } catch (error) {
     console.error('Error uploading image to the database', error);
     res.status(500).json({ error: 'Error uploading image' });
