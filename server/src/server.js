@@ -9,6 +9,7 @@ import * as url from 'url';
 import authRouter from './routes/auth.js';
 import eventRouter from './routes/events.js';
 import userRouter from './routes/users.js';
+import articleRouter from './routes/articles.js';
 
 const app = express();
 app.disable('x-powered-by');
@@ -34,6 +35,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 // Start of actions
 app.use('/', authRouter);
 app.use('/events', eventRouter);
+app.use('/articles', articleRouter);
 app.use('/users', userRouter);
 
 // Server interface page

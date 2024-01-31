@@ -54,14 +54,22 @@ async function seed() {
   // Create some fake articles with different types
   const article1 = await dbClient.article.create({
     data: {
+      articleTitle: 'News Article 1',
+      articleAuthor: 'John Doe',
+      articleType: 'NEWS',
+      articleTags: 'Fake, News',
+      articleHeaderImages: {
+        create: [
+          {
+            imageUrl: 'image_url_1.jpg',
+            imageTitle: 'Image 1',
+          },
+        ],
+      },
       articleItems: {
         create: [
           {
-            articleTitle: 'News Article 1',
             articleContent: 'This is the content of news article 1',
-            articleAuthor: 'John Doe',
-            articleType: 'NEWS',
-            articleTags: 'Fake, News',
             articleImages: {
               create: [
                 {
@@ -79,14 +87,22 @@ async function seed() {
 
   const article2 = await dbClient.article.create({
     data: {
+      articleTitle: 'Opinion Article 1',
+      articleAuthor: 'Jane Smith',
+      articleType: 'OPINION',
+      articleTags: 'Fake, Opinion',
+      articleHeaderImages: {
+        create: [
+          {
+            imageUrl: 'image_url_1.jpg',
+            imageTitle: 'Image 1',
+          },
+        ],
+      },
       articleItems: {
         create: [
           {
-            articleTitle: 'Opinion Article 1',
             articleContent: 'This is the content of opinion article 1',
-            articleAuthor: 'Jane Smith',
-            articleType: 'OPINION',
-            articleTags: 'Fake, Opinion',
             articleImages: {
               create: [
                 {
@@ -104,14 +120,22 @@ async function seed() {
 
   const article3 = await dbClient.article.create({
     data: {
+      articleTitle: 'Feature Article 1',
+      articleAuthor: 'Bob Johnson',
+      articleType: 'FEATURE',
+      articleTags: 'Fake, Feature',
+      articleHeaderImages: {
+        create: [
+          {
+            imageUrl: 'image_url_1.jpg',
+            imageTitle: 'Image 1',
+          },
+        ],
+      },
       articleItems: {
         create: [
           {
-            articleTitle: 'Feature Article 1',
             articleContent: 'This is the content of feature article 1',
-            articleAuthor: 'Bob Johnson',
-            articleType: 'FEATURE',
-            articleTags: 'Fake, Feature',
             articleImages: {
               create: [
                 {
@@ -126,46 +150,6 @@ async function seed() {
       userId: user3.id,
     },
   });
-
-  // Create a list of memes as article items
-  const memes = await Promise.all([
-    dbClient.articleItem.create({
-      data: {
-        articleTitle: 'Meme 1',
-        articleContent: 'This is a funny meme!',
-        articleAuthor: 'Meme Creator 1',
-        articleType: 'MEME',
-        articleTags: 'Meme',
-        articleImages: {
-          create: [
-            {
-              imageUrl: 'meme_image_1.jpg',
-              imageTitle: 'Meme Image 1',
-            },
-          ],
-        },
-        articleId: article1.id,
-      },
-    }),
-    dbClient.articleItem.create({
-      data: {
-        articleTitle: 'Meme 2',
-        articleContent: 'Another hilarious meme!',
-        articleAuthor: 'Meme Creator 2',
-        articleType: 'MEME',
-        articleTags: 'Meme',
-        articleImages: {
-          create: [
-            {
-              imageUrl: 'meme_image_2.jpg',
-              imageTitle: 'Meme Image 2',
-            },
-          ],
-        },
-        articleId: article1.id,
-      },
-    }),
-  ]);
 
   // Create comments for articles and article items
   const comment1 = await dbClient.articleComment.create({
@@ -192,31 +176,7 @@ async function seed() {
     },
   });
 
-  const comment4 = await dbClient.articleItemComment.create({
-    data: {
-      content: 'This is a comment on meme 1.',
-      userId: user1.id,
-      articleItemId: memes[0].id,
-    },
-  });
-
-  const comment5 = await dbClient.articleItemComment.create({
-    data: {
-      content: 'Interesting meme!',
-      userId: user2.id,
-      articleItemId: memes[0].id,
-    },
-  });
-
-  const comment6 = await dbClient.articleItemComment.create({
-    data: {
-      content: 'I love this meme!',
-      userId: user3.id,
-      articleItemId: memes[1].id,
-    },
-  });
-
-  // Create likes for articles and article items
+  // Now, create likes for articles and article items
   const articleLike1 = await dbClient.articleLike.create({
     data: {
       userId: user1.id,
@@ -231,48 +191,9 @@ async function seed() {
     },
   });
 
-  const articleItemLike1 = await dbClient.articleItemLike.create({
-    data: {
-      userId: user1.id,
-      articleItemId: memes[0].id,
-    },
-  });
+  // You've created comments and likes for articles, let's proceed to create article item comments and likes
 
-  const articleItemLike2 = await dbClient.articleItemLike.create({
-    data: {
-      userId: user2.id,
-      articleItemId: memes[0].id,
-    },
-  });
-
-  const articleCommentLike1 = await dbClient.articleCommentLike.create({
-    data: {
-      userId: user1.id,
-      articleCommentId: comment1.id,
-    },
-  });
-
-  const articleCommentLike2 = await dbClient.articleCommentLike.create({
-    data: {
-      userId: user2.id,
-      articleCommentId: comment1.id,
-    },
-  });
-
-  const articleItemCommentLike1 = await dbClient.articleItemCommentLike.create({
-    data: {
-      userId: user1.id,
-      articleItemCommentId: comment4.id,
-    },
-  });
-
-  const articleItemCommentLike2 = await dbClient.articleItemCommentLike.create({
-    data: {
-      userId: user2.id,
-      articleItemCommentId: comment4.id,
-    },
-  });
-
+  
   // EVENTS
   const event1 = await dbClient.event.create({
     data: {
