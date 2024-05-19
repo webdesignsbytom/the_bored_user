@@ -45,6 +45,7 @@ async function seed() {
 
   const devUser = await dbClient.user.create({
     data: {
+      id: 'dev',
       email: 'dev@dev.com',
       password,
       role: 'DEVELOPER',
@@ -54,27 +55,27 @@ async function seed() {
   // Create some fake articles with different types
   const article1 = await dbClient.article.create({
     data: {
-      articleTitle: 'News Article 1',
-      articleAuthor: 'John Doe',
-      articleType: 'NEWS',
-      articleTags: ['Fake', 'News'],
-      articleHeaderImages: {
+      title: 'News Article 1',
+      author: 'John Doe',
+      type: { set: ['NEWS'] },
+      tags: ['Fake', 'News'],
+      headerImages: {
         create: [
           {
-            imageUrl: 'meme3.jpeg',
-            imageTitle: 'Image 1',
+            url: 'meme3.jpeg',
+            title: 'Image 1',
           },
         ],
       },
-      articleItems: {
+      items: {
         create: [
           {
-            articleContent: 'This is the content of news article 1',
-            articleImages: {
+            content: 'This is the content of news article 1',
+            images: {
               create: [
                 {
-                  imageUrl: 'meme1.jpeg',
-                  imageTitle: 'Image 1',
+                  url: 'meme1.jpeg',
+                  title: 'Image 1',
                 },
               ],
             },
@@ -87,27 +88,27 @@ async function seed() {
 
   const article2 = await dbClient.article.create({
     data: {
-      articleTitle: 'Opinion Article 1',
-      articleAuthor: 'Jane Smith',
-      articleType: 'OPINION',
-      articleTags: ['Fake', 'News'],
-      articleHeaderImages: {
+      title: 'Opinion Article 1',
+      author: 'Jane Smith',
+      type: { set: ['NEWS'] },
+      tags: ['Fake', 'News'],
+      headerImages: {
         create: [
           {
-            imageUrl: 'meme2.jpeg',
-            imageTitle: 'Image 1',
+            url: 'meme2.jpeg',
+            title: 'Image 1',
           },
         ],
       },
-      articleItems: {
+      items: {
         create: [
           {
-            articleContent: 'This is the content of opinion article 1',
-            articleImages: {
+            content: 'This is the content of opinion article 1',
+            images: {
               create: [
                 {
-                  imageUrl: 'meme4.jpeg',
-                  imageTitle: 'Image 2',
+                  url: 'meme4.jpeg',
+                  title: 'Image 2',
                 },
               ],
             },
@@ -120,27 +121,27 @@ async function seed() {
 
   const article3 = await dbClient.article.create({
     data: {
-      articleTitle: 'Feature Article 1',
-      articleAuthor: 'Bob Johnson',
-      articleType: 'FEATURE',
-      articleTags: ['Fake', 'News'],
-      articleHeaderImages: {
+      title: 'Feature Article 1',
+      author: 'Bob Johnson',
+      type: { set: ['NEWS'] },
+      tags: ['Fake', 'News'],
+      headerImages: {
         create: [
           {
-            imageUrl: 'meme6.jpeg',
-            imageTitle: 'Image 1',
+            url: 'meme6.jpeg',
+            title: 'Image 1',
           },
         ],
       },
-      articleItems: {
+      items: {
         create: [
           {
-            articleContent: 'This is the content of feature article 1',
-            articleImages: {
+            content: 'This is the content of feature article 1',
+            images: {
               create: [
                 {
-                  imageUrl: 'meme7.jpeg',
-                  imageTitle: 'Image 3',
+                  url: 'meme7.jpeg',
+                  title: 'Image 3',
                 },
               ],
             },
@@ -148,6 +149,72 @@ async function seed() {
         ],
       },
       userId: user3.id,
+    },
+  });
+
+  const article4 = await dbClient.article.create({
+    data: {
+      title: 'Tech Article 1',
+      author: 'Alice White',
+      type: { set: ['TECHNOLOGY'] },
+      tags: ['Tech', 'Gadgets'],
+      headerImages: {
+        create: [
+          {
+            url: 'tech1.jpeg',
+            title: 'Image 1',
+          },
+        ],
+      },
+      items: {
+        create: [
+          {
+            content: 'This is the content of tech article 1',
+            images: {
+              create: [
+                {
+                  url: 'tech2.jpeg',
+                  title: 'Image 2',
+                },
+              ],
+            },
+          },
+        ],
+      },
+      userId: user1.id,
+    },
+  });
+
+  const article5 = await dbClient.article.create({
+    data: {
+      title: 'Cooking Article 1',
+      author: 'Charlie Brown',
+      type: { set: ['COOKING'] },
+      tags: ['Food', 'Recipes'],
+      headerImages: {
+        create: [
+          {
+            url: 'cooking1.jpeg',
+            title: 'Image 1',
+          },
+        ],
+      },
+      items: {
+        create: [
+          {
+            content: 'This is the content of cooking article 1',
+            images: {
+              create: [
+                {
+                  url: 'cooking2.jpeg',
+                  title: 'Image 2',
+                },
+              ],
+            },
+          },
+        ],
+      },
+      userId: user2.id,
     },
   });
 
@@ -191,9 +258,33 @@ async function seed() {
     },
   });
 
-  // You've created comments and likes for articles, let's proceed to create article item comments and likes
+  const articleLike3 = await dbClient.articleLike.create({
+    data: {
+      userId: user3.id,
+      articleId: article2.id,
+    },
+  });
 
-  
+  // Create comments and likes for article items
+  const itemComment1 = await dbClient.articleItemComment.create({
+    data: {
+      content: 'This is a comment on an article item.',
+      userId: user1.id,
+      articleItemId: (await dbClient.articleItem.findFirst({
+        where: { articleId: article1.id }
+      })).id,
+    },
+  });
+
+  const itemLike1 = await dbClient.articleItemLike.create({
+    data: {
+      userId: user2.id,
+      articleItemId: (await dbClient.articleItem.findFirst({
+        where: { articleId: article1.id }
+      })).id,
+    },
+  });
+
   // EVENTS
   const event1 = await dbClient.event.create({
     data: {
@@ -201,12 +292,8 @@ async function seed() {
       topic: 'Test event',
       code: 500,
       content: '500 test content',
-      createdBy: {
-        connect: { id: user1.id },
-      },
-      receivedBy: {
-        connect: { id: user3.id },
-      },
+      createdById: user1.id,
+      receivedById: user3.id,
     },
   });
 
@@ -216,12 +303,8 @@ async function seed() {
       topic: 'Test event',
       code: 200,
       content: '200 test content',
-      createdBy: {
-        connect: { id: user3.id },
-      },
-      receivedBy: {
-        connect: { id: user2.id },
-      },
+      createdById: user3.id,
+      receivedById: user2.id,
     },
   });
 
@@ -231,12 +314,8 @@ async function seed() {
       topic: 'Test event',
       code: 201,
       content: '201 test content',
-      createdBy: {
-        connect: { id: user2.id },
-      },
-      receivedBy: {
-        connect: { id: user1.id },
-      },
+      createdById: user2.id,
+      receivedById: user1.id,
     },
   });
 
@@ -246,12 +325,8 @@ async function seed() {
       topic: 'Test event',
       code: 201,
       content: '201 test content',
-      createdBy: {
-        connect: { id: user1.id },
-      },
-      receivedBy: {
-        connect: { id: user3.id },
-      },
+      createdById: user1.id,
+      receivedById: user3.id,
     },
   });
 
@@ -261,12 +336,8 @@ async function seed() {
       topic: 'Test event',
       code: 201,
       content: '201 test content',
-      createdBy: {
-        connect: { id: user3.id },
-      },
-      receivedBy: {
-        connect: { id: user2.id },
-      },
+      createdById: user3.id,
+      receivedById: user2.id,
     },
   });
 }

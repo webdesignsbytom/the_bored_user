@@ -14,8 +14,9 @@ import {
   ServerErrorEvent,
   MissingFieldEvent,
   RegistrationServerErrorEvent,
+  BadRequestEvent,
 } from '../event/utils/errorUtils.js';
-import { findAllArticles } from '../domain/articles.js';
+import { createArticle, findAllArticles } from '../domain/articles.js';
 // Image upload
 // const storage = multer.memoryStorage();
 // const upload = multer({ storage });
@@ -33,7 +34,7 @@ export const getLatestArticles = async (req, res) => {
         console.error(err);
         return;
       }
-    
+
       files.forEach((file) => {
         console.log(file);
       });
@@ -42,7 +43,10 @@ export const getLatestArticles = async (req, res) => {
     const foundArticles = await findAllArticles();
     console.log('foundArticles', foundArticles);
 
-    return sendDataResponse(res, 200, { articles: foundArticles, imageEndPoint: imageEndPoint });
+    return sendDataResponse(res, 200, {
+      articles: foundArticles,
+      imageEndPoint: imageEndPoint,
+    });
   } catch (err) {
     //
     const serverError = new ServerErrorEvent(req.user, `Get all events`);
@@ -78,7 +82,10 @@ export const getAllArticlesByType = async (req, res) => {
 
     return sendDataResponse(res, 200, { articles: foundArticles });
   } catch (err) {
-    const serverError = new ServerErrorEvent(req.user, `Get all articles by type`);
+    const serverError = new ServerErrorEvent(
+      req.user,
+      `Get all articles by type`
+    );
     myEmitterErrors.emit('error', serverError);
     sendMessageResponse(res, serverError.code, serverError.message);
     throw err;
@@ -87,14 +94,52 @@ export const getAllArticlesByType = async (req, res) => {
 
 export const createNewArticle = async (req, res) => {
   console.log('createNewArticle');
+  const { userId } = req.params;
+  console.log('userId', userId);
+  const { title, content, author, type, tags, headerImages, articleImages } =
+    req.body;
 
   try {
-    const { userId } = req.params;
-    const { title, content } = req.body;
+    console.log('11111111111111111');
 
+    if (!userId || !title || !content || !author || !type) {
+      const missingField = new MissingFieldEvent(
+        null,
+        'Article creation: Missing Field/s event'
+      );
+      myEmitterErrors.emit('error', missingField);
+      return sendMessageResponse(res, missingField.code, missingField.message);
+    }
+
+    console.log('2222222222222222222', title);
     // Create new article logic here
+    const createdArticle = await createArticle(
+      title,
+      content,
+      author,
+      type,
+      tags,
+      headerImages,
+      articleImages,
+      userId
+    );
 
-    return sendDataResponse(res, 200, { message: 'Article created successfully' });
+    console.log('333333333333333333333');
+
+    if (!createdArticle) {
+      const notCreated = new BadRequestEvent(
+        EVENT_MESSAGES.badRequest,
+        EVENT_MESSAGES.createArticleFail
+      );
+      myEmitterErrors.emit('error', notCreated);
+      return sendMessageResponse(res, notCreated.code, notCreated.message);
+    }
+
+    console.log('created article', createdArticle);
+
+    return sendDataResponse(res, 200, {
+      message: 'Article created successfully',
+    });
   } catch (err) {
     const serverError = new ServerErrorEvent(req.user, `Create new article`);
     myEmitterErrors.emit('error', serverError);
@@ -112,7 +157,9 @@ export const editArticle = async (req, res) => {
 
     // Edit article logic here
 
-    return sendDataResponse(res, 200, { message: 'Article edited successfully' });
+    return sendDataResponse(res, 200, {
+      message: 'Article edited successfully',
+    });
   } catch (err) {
     const serverError = new ServerErrorEvent(req.user, `Edit article`);
     myEmitterErrors.emit('error', serverError);
@@ -129,7 +176,9 @@ export const deleteArticle = async (req, res) => {
 
     // Delete article logic here
 
-    return sendDataResponse(res, 200, { message: 'Article deleted successfully' });
+    return sendDataResponse(res, 200, {
+      message: 'Article deleted successfully',
+    });
   } catch (err) {
     const serverError = new ServerErrorEvent(req.user, `Delete article`);
     myEmitterErrors.emit('error', serverError);
