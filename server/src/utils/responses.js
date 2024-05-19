@@ -18,6 +18,8 @@ export const EVENT_MESSAGES = {
   articleTag: `Article database`,
   articleNotFound: `Failed to find article`,
   createArticleFail: `Failed to create article`,
+  articleNotDeleted: `Failed to delete article`,
+  createArticleLikeFailed: `Failed to create article like`,
   // Events
   eventTag: `Event database`,
   eventNotFound: `Failed to find event`,
