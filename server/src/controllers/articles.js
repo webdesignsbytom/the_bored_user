@@ -52,28 +52,88 @@ export const getLatestArticles = async (req, res) => {
   }
 };
 
-// export const uploadImageToArticle = async (req, res) => {
-//   console.log('uploadImageToArticle');
+export const getAllArticles = async (req, res) => {
+  console.log('getAllArticles');
 
-//   try {
-//     // Access the uploaded image data from req.file.buffer
-//     const imageBuffer = req.file.buffer;
+  try {
+    const foundArticles = await findAllArticles(type);
+    console.log('foundArticles', foundArticles);
 
-//     // Insert the image data into the ArticleImage table using Prisma as a BLOB
-//     const createdImage = await prisma.articleImage.create({
-//       data: {
-//         imageTitle: 'YourImageTitle', // Replace with actual image title
-//         articleItemId: 'YourArticleItemId', // Replace with actual article item ID
-//         data: imageBuffer, // Store the image data as a BLOB
-//       },
-//     });
+    return sendDataResponse(res, 200, { articles: foundArticles });
+  } catch (err) {
+    const serverError = new ServerErrorEvent(req.user, `Get all articles`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
 
-//     res.status(200).json({
-//       message: 'Image uploaded and saved as BLOB to the database',
-//       image: createdImage,
-//     });
-//   } catch (error) {
-//     console.error('Error uploading image to the database', error);
-//     res.status(500).json({ error: 'Error uploading image' });
-//   }
-// };
+export const getAllArticlesByType = async (req, res) => {
+  console.log('getAllArticlesByType');
+
+  try {
+    const { type } = req.query;
+    const foundArticles = await findAllArticlesByType(type);
+    console.log('foundArticles', foundArticles);
+
+    return sendDataResponse(res, 200, { articles: foundArticles });
+  } catch (err) {
+    const serverError = new ServerErrorEvent(req.user, `Get all articles by type`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
+
+export const createNewArticle = async (req, res) => {
+  console.log('createNewArticle');
+
+  try {
+    const { userId } = req.params;
+    const { title, content } = req.body;
+
+    // Create new article logic here
+
+    return sendDataResponse(res, 200, { message: 'Article created successfully' });
+  } catch (err) {
+    const serverError = new ServerErrorEvent(req.user, `Create new article`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
+
+export const editArticle = async (req, res) => {
+  console.log('editArticle');
+
+  try {
+    const { articleId } = req.params;
+    const { title, content } = req.body;
+
+    // Edit article logic here
+
+    return sendDataResponse(res, 200, { message: 'Article edited successfully' });
+  } catch (err) {
+    const serverError = new ServerErrorEvent(req.user, `Edit article`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
+
+export const deleteArticle = async (req, res) => {
+  console.log('deleteArticle');
+
+  try {
+    const { articleId } = req.params;
+
+    // Delete article logic here
+
+    return sendDataResponse(res, 200, { message: 'Article deleted successfully' });
+  } catch (err) {
+    const serverError = new ServerErrorEvent(req.user, `Delete article`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};

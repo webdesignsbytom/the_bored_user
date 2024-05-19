@@ -17,15 +17,15 @@ enum Role {
 
 model User {
   id                       String                   @id @default(uuid())
-  email                    String                   @unique
-  password                 String
-  article                  Article[]
+  email                    String                   @unique @db.VarChar(255)
+  password                 String                   @db.VarChar(255)
+  articles                 Article[]
   articleLikes             ArticleLike[]
   articleComments          ArticleComment[]
   articleCommentLikes      ArticleCommentLike[]
   articleItemComments      ArticleItemComment[]
-  articleItemLike          ArticleItemLike[]
-  articleItemCommentsLikes ArticleItemCommentLike[]
+  articleItemLikes         ArticleItemLike[]
+  articleItemCommentLikes  ArticleItemCommentLike[]
   role                     Role                     @default(USER)
   createdEvents            Event[]                  @relation("createdEvents")
   receivedEvents           Event[]                  @relation("receivedEvents")
@@ -35,15 +35,15 @@ model User {
 
 model Article {
   id                  String               @id @default(uuid())
-  articleTitle        String
-  articleAuthor       String
-  articleType         String
-  articleTags         String[]
-  articleItems        ArticleItem[]
+  title               String               @db.VarChar(255)
+  author              String               @db.VarChar(255)
+  type                String               @db.VarChar(255)
+  tags                String[]             @db.VarChar(255)
+  items               ArticleItem[]
   comments            ArticleComment[]
   likes               ArticleLike[]
-  articleHeaderImages ArticleHeaderImage[]
-  User                User?                @relation(fields: [userId], references: [id])
+  headerImages        ArticleHeaderImage[]
+  user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId              String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime?            @updatedAt
@@ -51,32 +51,32 @@ model Article {
 
 model ArticleItem {
   id             String               @id @default(uuid())
-  articleContent String
-  articleImages  ArticleImage[]
+  content        String               @db.Text
+  images         ArticleImage[]
+  article        Article              @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId      String
   comments       ArticleItemComment[]
   likes          ArticleItemLike[]
-  article        Article              @relation(fields: [articleId], references: [id], onDelete: Cascade)
   createdAt      DateTime             @default(now())
   updatedAt      DateTime?            @updatedAt
 }
 
 model ArticleHeaderImage {
   id         String    @id @default(uuid())
-  imageUrl   String
-  imageTitle String
-  articleId  String
+  url        String    @db.VarChar(255)
+  title      String    @db.VarChar(255)
   article    Article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId  String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
 }
 
 model ArticleImage {
   id            String      @id @default(uuid())
-  imageUrl      String
-  imageTitle    String
-  articleItemId String
+  url           String      @db.VarChar(255)
+  title         String      @db.VarChar(255)
   articleItem   ArticleItem @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
+  articleItemId String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime?   @updatedAt
 }
@@ -84,10 +84,10 @@ model ArticleImage {
 model ArticleComment {
   id        String               @id @default(uuid())
   content   String               @db.VarChar(250)
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  user      User                 @relation(fields: [userId], references: [id])
-  articleId String
   article   Article              @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
   likes     ArticleCommentLike[]
   createdAt DateTime             @default(now())
   updatedAt DateTime?            @updatedAt
@@ -96,10 +96,10 @@ model ArticleComment {
 model ArticleItemComment {
   id            String                   @id @default(uuid())
   content       String                   @db.VarChar(250)
+  user          User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  user          User                     @relation(fields: [userId], references: [id])
-  articleItemId String
   articleItem   ArticleItem              @relation(fields: [articleItemId], references: [id], onDelete: Cascade)
+  articleItemId String
   likes         ArticleItemCommentLike[]
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime?                @updatedAt
@@ -123,7 +123,6 @@ model ArticleLike {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Define a composite unique constraint on userId and commentId
   @@unique([userId, articleId])
 }
 
@@ -136,7 +135,6 @@ model ArticleItemLike {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
-  // Define a composite unique constraint on userId and commentId
   @@unique([userId, articleItemId])
 }
 
@@ -149,7 +147,6 @@ model ArticleCommentLike {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
-  // Define a composite unique constraint on userId and commentId
   @@unique([userId, articleCommentId])
 }
 
@@ -162,11 +159,9 @@ model ArticleItemCommentLike {
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
-  // Define a composite unique constraint on userId and commentId
   @@unique([userId, articleItemCommentId])
 }
 
-// EVENTS
 enum EventType {
   ERROR
   USER
@@ -181,9 +176,9 @@ enum EventType {
 model Event {
   id           String    @id @default(uuid())
   type         EventType
-  topic        String?
+  topic        String?   @db.VarChar(255)
   code         Int?
-  content      String?
+  content      String?   @db.VarChar(255)
   createdBy    User?     @relation("createdEvents", fields: [createdById], references: [id], onDelete: Cascade)
   createdById  String?
   receivedBy   User?     @relation("receivedEvents", fields: [receivedById], references: [id], onDelete: Cascade)
