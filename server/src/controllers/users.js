@@ -66,7 +66,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   console.log('getUserById');
-  const userId = req.params.id;
+  const userId = req.params.userId;
   console.log('xxx');
   try {
     const foundUser = await findUserById(userId);
@@ -94,13 +94,45 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const getUserByEmail = async (req, res) => {
+  console.log('getUserByEmail');
+  const userEmail = req.params.userEmail;
+  console.log('xxx');
+  try {
+    const foundUser = await findUserByEmail(userEmail);
+
+    if (!foundUser) {
+      const notFound = new NotFoundEvent(
+        req.user,
+        EVENT_MESSAGES.notFound,
+        EVENT_MESSAGES.userNotFound
+      );
+      myEmitterErrors.emit('error', notFound);
+      return sendMessageResponse(res, notFound.code, notFound.message);
+    }
+
+    console.log('found', foundUser);
+    delete foundUser.password;
+    delete foundUser.agreedToTerms;
+
+    //myEmitterUsers.emit('get-user-by-email', req.user);
+    return sendDataResponse(res, 200, { user: foundUser });
+  } catch (err) {
+    // Error
+    const serverError = new ServerErrorEvent(req.user, `Get user by ID`);
+    myEmitterErrors.emit('error', serverError);
+    sendMessageResponse(res, serverError.code, serverError.message);
+    throw err;
+  }
+};
+
 export const registerNewUser = async (req, res) => {
   console.log('create new user');
 }
 
 // export const verifyUser = async (req, res) => {
 //   console.log('Verifying user');
-//   const { userId, uniqueString } = req.params;
+//   const { userEmail, uniqueString } = req.params;
 
 //   try {
 //     const foundVerification = await findVerification(userId);

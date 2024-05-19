@@ -105,6 +105,15 @@ model ArticleItemComment {
   updatedAt     DateTime?                @updatedAt
 }
 
+enum ArticleRewardType {
+  DISLIKED0
+  UNGRADED1
+  LIKED2
+  SUPERLIKED3
+  LOVED4
+  PERFECT5
+}
+
 model ArticleLike {
   id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
